@@ -5,11 +5,12 @@
 #include <sys/mman.h>
 
 #define GiB * (1024LL * 1024 * 1024)
+#define MiB * (1024LL * 1024)
 
 int main() {
     volatile uint8_t *p = mmap(
         NULL,
-        8 GiB,
+        32 MiB,
         PROT_READ | PROT_WRITE,
         MAP_ANONYMOUS | MAP_PRIVATE,
         -1, 0
@@ -22,10 +23,10 @@ int main() {
         exit(1);
     }
 
-    *(p + 2 GiB) = 1;
-    *(p + 4 GiB) = 2;
-    *(p + 7 GiB) = 3;
-    printf("Read get: %d\n", *(p + 4 GiB));
-    printf("Read get: %d\n", *(p + 6 GiB));
-    printf("Read get: %d\n", *(p + 7 GiB));
+    *(p + 2 MiB) = 1;
+    *(p + 4 MiB) = 2;
+    *(p + 7 MiB) = 3;
+    printf("Read get: %d\n", *(p + 4 MiB));
+    printf("Read get: %d\n", *(p + 6 MiB));
+    printf("Read get: %d\n", *(p + 7 MiB));
 }
