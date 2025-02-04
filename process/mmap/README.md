@@ -1,1 +1,1 @@
-**mmap**: Linux 系统使用 anonymous 的 mmap 来实现大段连续内存的分配——甚至在系统调用返回的瞬间，进程可以没有得到任何实际的内存，而是只要在首次访问时 (触发缺页异常) 分配即可。AddressSanitizer 就用 mmap 分配了 shadow memory，我们可以使用 strace 观察到这一点。
+mmap: The Linux system uses anonymous mmap to allocate large contiguous memory regions—even at the moment the system call returns, the process may not have received any actual memory. Instead, allocation occurs only upon the first access when a page fault is triggered. AddressSanitizer utilizes mmap to allocate shadow memory, which we can observe using strace.
