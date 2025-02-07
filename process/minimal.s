@@ -2,7 +2,7 @@
  * minimal_hello.s - Minimal Assembly Program
  *
  * 1. Compile the program using gcc:
- *    gcc minimal_hello.s -c
+ *    gcc -c minimal_hello.s
  *
  * 2. Link the object file (output will default to `a.out`):
  *    ld minimal_hello.o
