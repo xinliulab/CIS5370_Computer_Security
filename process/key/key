@@ -1,14 +1,18 @@
-#!/bin/bash
+#!/usr/bin/expect -f
+#
+# An expect script to spawn ./typer, then auto-send space
+# sudo apt-get update
+# sudo apt-get install expect
 
-# Needs sudo. Try:
-# https://js13kgames.com/games/spacebar-clicker/index.html
 
-echo 'Start in 5 seconds...'
-ydotoold &> /dev/null &
-sleep 5
+spawn ./typer
 
-for _ in $(seq 1 200)
-do
-    ydotool type ' '
-    sleep 0.01
-done
+sleep 2
+
+set i 0
+while {$i < 2000} {
+    send " "
+    incr i
+    sleep 0.001
+}
+interact
