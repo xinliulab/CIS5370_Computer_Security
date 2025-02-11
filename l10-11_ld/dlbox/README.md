@@ -1,0 +1,1 @@
+**dlbox**: An "ultra-minimal" dynamic linker and loader that invokes dynamically linked symbols through a lookup table. Interested students can explore the details of ELF dynamic linking and loading after class.
