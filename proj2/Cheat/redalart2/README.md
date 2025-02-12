@@ -1,1 +1,0 @@
-The operating system provides mechanisms that allow us to implement debuggers, enabling us to inspect and even modify the code and data of any process. This capability allows us to bypass the "artificial barriers" set by the game, gaining more money, experience, or even locking health points.

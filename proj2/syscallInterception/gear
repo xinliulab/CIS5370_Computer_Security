@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
-# ./gear 10 tetris
+# Try it out:
+# Run `./gear 10 tetris` in your terminal 
+# where `10` represents the speed multiplier
 
 import subprocess
 import sys

@@ -1,4 +1,4 @@
-#include "toybox/toybox.h"
+#include "toybox.h"
 #include <stdlib.h>
 #include <time.h>
 
