@@ -36,7 +36,7 @@ We provided a C++ source code example that modifies the money value in Red Alert
 - **Open-Ended Implementation:** There are no strict requirements regarding the final effect. You may follow the example above or propose your own innovative approach.  
   *For example, you might design the tool so that if a discovered memory block does not match the expected block, the tool modifies the memory data to replace it with a matching block, or even removes the block altogether regardless of a match.*
 - **Report Submission:** Your report must describe your method and its underlying principles, document your code debugging process, and include evidence of your solution in action (such as runtime results or screenshots).
-- **Voting and Extra Credit:** We will vote to select the top three best game cheat tools designed under Option 2, awarding extra credit points of **5, 3, and 2** respectively.
+- **Voting and Extra Credit:** We will vote to select the top three best game cheat tools designed under Option 2 on Mar 4th, awarding extra credit points of **5, 3, and 2** respectively.
 
 ---
 
