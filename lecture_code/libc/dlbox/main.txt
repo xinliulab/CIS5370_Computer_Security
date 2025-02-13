@@ -1,0 +1,5 @@
+Disassembly of binary main.dl:
+
+0000000000000020 <_start>:
+00000020  E8DBFFFFFF        call 0x0
+00000025  FF2575FFFFFF      jmp [rel 0xffffffffffffffa0]
