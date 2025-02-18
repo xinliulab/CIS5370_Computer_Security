@@ -56,6 +56,7 @@ Alternatively, use the provided script:
 ## Observing Memory Usage
 
 ### Check Active Processes
+Open a new terminal
 ```bash
 ps aux | grep bloat
 ```
