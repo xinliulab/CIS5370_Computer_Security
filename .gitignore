@@ -4,4 +4,8 @@
 
 *.so
 
+*.dl
+
+*.txt
+
 build/
