@@ -161,7 +161,7 @@ static struct dlib *dlopen(const char *path) {
             dlload(sym);
             break; // (recursively) load
         case '?':
-            sym->offset = (uintptr_t)dlsym(sym->name);
+            sym->offset = (uintptr_t)dlsyme(sym->name);
             break; // resolve
         case '#':
             dlexport(sym->name, (char *)h + sym->offset);

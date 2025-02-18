@@ -198,3 +198,70 @@ dlbox functions because:
   - The custom loader provides necessary runtime support
 
 dlbox serves as a lightweight dynamic loader that bypasses ELF complexity while maintaining functionality, making it an excellent educational tool for understanding dynamic linking concepts.
+
+
+# Understanding Symbol Resolution in dlbox
+
+## 1. What is `offset` in `dlsym()` and `dlexport()`?
+
+- `syms[i].offset` stores the symbol (function or variable) offset within the `.dl` file, relative to the file's starting address
+- During runtime, `.dl` files are not loaded using the ELF method, but rather mapped to dynamically allocated memory addresses using `mmap()`
+
+### Example
+Consider `func_hello` in `libhello.dl` located at offset `0x50` in the `.text` section:
+
+```c
+syms[i].name = "func_hello";
+syms[i].offset = 0x50;  // Offset relative to .dl file
+```
+
+If `libhello.dl` is mapped to memory address `0x7fff1000` via `mmap()`:
+- The actual function address = `0x7fff1000 + 0x50`
+
+## 2. How does dlbox Correct `offset` for Proper Resolution?
+
+dlbox uses a two-step resolution mechanism:
+
+### Step 1: Symbol Export
+In `dlexport()`, `offset` stores the global address:
+
+```c
+syms[i].offset = (uintptr_t)addr;  // addr is the global address after loading
+```
+- Here, `addr` is the global address after `mmap()` mapping, not the local offset within the `.dl` file
+
+### Step 2: Symbol Resolution
+In `dlsym()`, the returned `offset` is the global address:
+
+```c
+return (void *)syms[i].offset;
+```
+- When `main` looks up a symbol using `dlsym("func_hello")`, it directly receives the global address `0x7fff1000 + 0x50`, not the internal `.dl` offset
+
+## Code Example
+
+```c
+// 1. dlexport() records symbol information
+dlexport("func_hello", (void *)(mmap_base + sym->offset));
+
+// 2. dlsym() resolves symbol, returns absolute address
+void *addr = dlsym("func_hello");
+```
+
+This mechanism ensures that `main` can correctly resolve function addresses during runtime.
+
+## Resolution Process Flow
+
+1. Initial Loading:
+   - `.dl` file is loaded into memory via `mmap()`
+   - Base address is assigned (e.g., `0x7fff1000`)
+
+2. Symbol Export:
+   - Local offsets are converted to global addresses
+   - Symbol table is updated with absolute addresses
+
+3. Symbol Resolution:
+   - `dlsym()` looks up symbols in the table
+   - Returns ready-to-use function pointers
+
+This approach simplifies symbol resolution by eliminating the need for runtime address calculation, as all addresses are pre-computed during the loading phase.
