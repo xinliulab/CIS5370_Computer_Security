@@ -73,8 +73,6 @@ watch *0x555555557fd0    # Watch for writes
 rwatch *0x555555557fd0   # Watch for reads
 ```
 
-
-
 Run to the watch point: 
 ```bash
 c
@@ -84,6 +82,8 @@ Examine memory content:
 ```bash
 p/x *0x555555557fd0
 ```
+
+The p/x *0x555555557fd0 command prints the hexadecimal value stored at memory address 0x555555557fd0. In this context, that address corresponds to a Global Offset Table (GOT) entry pointing to the actual exit function in libc. Consequently, the output (for example, 0xf7c47ba0) is the runtime address in libc for exit (internally __GI_exit).
 
 ## Key Learning Points
 
