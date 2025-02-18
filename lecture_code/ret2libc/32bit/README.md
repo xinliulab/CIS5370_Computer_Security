@@ -12,6 +12,12 @@ This ensures that each time `stack` runs, the `libc` load address remains unchan
 
 ## 📌 Step 2: Compile `stack.c`
 
+If your system is 64-bit, you may need to install 32-bit libraries:
+
+```bash
+sudo apt-get install gcc-multilib
+```
+
 Your `stack.c` code contains a typical buffer overflow vulnerability. First, stack protection needs to be disabled; otherwise, GCC will prevent buffer overflows by default:
 
 ```bash
@@ -24,18 +30,6 @@ gcc -m32 -fno-stack-protector -z execstack -o stack stack.c
 - `-z execstack` 👉 Allows execution of code on the stack (for shellcode).
 - `-o stack` 👉 Generates an executable file named `stack`.
 
-If your system is 64-bit, you may need to install 32-bit libraries:
-
-```bash
-sudo apt-get install gcc-multilib
-```
-
-Then compile:
-
-```bash
-gcc -m32 -fno-stack-protector -z execstack -o stack stack.c
-```
-
 ## 📌 Step 3: Run `stack` and Check for Vulnerability
 
 First, run `stack` to ensure it reads `badfile` correctly:
@@ -47,7 +41,7 @@ First, run `stack` to ensure it reads `badfile` correctly:
 Since `badfile` has not been created yet, `stack` may output:
 
 ```
-Returned Properly
+Segmentation fault (core dumped)
 ```
 
 However, once `badfile` contains a malicious payload, it may hijack the return address and execute `system("/bin/sh")`, gaining a shell.
@@ -73,8 +67,14 @@ Then check the address of `system()`:
 (gdb) p system
 $1 = {<text variable, no debug info>} 0xf7e42da0 <system>
 ```
-
 Record this address (e.g., `0xf7e42da0`) as it will be used to craft the attack payload.
+
+Then check the address of `exit()`:
+
+```gdb
+(gdb) p exit
+$1 = {<text variable, no debug info>} 0xb7e369d0 <system>
+```
 
 You can also locate the address of `"/bin/sh"` in `libc`:
 
