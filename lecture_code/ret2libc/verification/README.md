@@ -33,22 +33,8 @@ objdump -d libbloat.so | less
 
 ### 3. Run the Test
 
-First, set the library path:
-```bash
-export LD_LIBRARY_PATH=.:$LD_LIBRARY_PATH
-```
+Start 100 processes using the provided script:
 
-Then, start 100 processes using:
-```bash
-for _ in $(seq 1 100); do
-    ./bloat &
-done
-
-# Wait for all processes to finish
-wait
-```
-
-Alternatively, use the provided script:
 ```bash
 ./run
 ```
