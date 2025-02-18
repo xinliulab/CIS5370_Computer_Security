@@ -60,6 +60,7 @@ Then check the address of `printf()`, `exit()`, and `$ebp` (frame pointer):
 (gdb) p exit
 (gdb) p/x $ebp
 ```
+
 ### Step 4. Function Address Resolution
 
 You can also locate the address of `"/bin/sh"` in `libc`:
