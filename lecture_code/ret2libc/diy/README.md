@@ -31,14 +31,11 @@ Run a dynamically loaded executable:
 ./dlbox interp main.dl
 ```
 
+#### Use main.s as an example to observe the dynamic linking process:
+
 Inspect the preprocessed assembly file:
 ```bash
 gcc -E main.S
-```
-
-Read symbol table from a dynamic library:
-```bash
-./dlbox readdl libc.dl
 ```
 
 Compile an object file with position-independent code:
@@ -46,9 +43,18 @@ Compile an object file with position-independent code:
 gcc -m64 -fPIC -c main.S
 ```
 
+Read symbol table from a dynamic library:
+```bash
+./dlbox readdl main.dl
+```
+
+The reason dlbox can run is that its .dl code contains only the .text section and does not use .data or .bss.
+
+The .data and .bss sections are typically used for global variables in C, but dlbox primarily executes handwritten assembly code, where all variables are stored in registers and the stack, allowing it to bypass .data and .bss.
+
 Disassemble an object file:
 ```bash
-objdump -d libhello.o
+objdump -d main.o
 ```
 
 View exported symbols from `libhello.dl`:
@@ -56,26 +62,139 @@ View exported symbols from `libhello.dl`:
 ./dlbox readdl libhello.dl
 ```
 
-## Understanding the Code
+# Understanding the Code: dlbox Implementation Details 
 
-### Key Components
+## 1. Custom Format Execution
 
-- **dlbox.c**
-  - Implements a custom dynamic linker and loader
-  - Loads `.dl` files into memory using `mmap()`
-  - Resolves symbols using a manually managed lookup table
+`dlbox` uses a custom format that's still CPU-executable, based on 32-byte alignment. The format includes:
 
-- **dl.h**
-  - Defines the structure of a `.dl` file, including headers and symbol records
-  - Implements macros for importing and exporting symbols in assembly
+- **DL_HEAD**: File header containing
+  - Magic number
+  - File size
+  - Code offset metadata
 
-- **main.S, libc.S, libhello.S**
-  - Example assembly source files demonstrating how symbols are defined and referenced
+- **DL_CODE**: Section containing executable machine code
 
-### Learning Outcomes
+- **RECORD**: Symbol table for storing:
+  - Import symbols (`?`)
+  - Export symbols (`#`)
+  - Load symbols (`+`)
 
-By working with `dlbox`, students will:
-- Understand how dynamic linking works at a low level
-- Learn how symbols are resolved in a dynamically linked program
-- Explore how shared libraries are loaded and executed without relying on the OS linker
-- Gain hands-on experience with assembly language and symbol resolution
+Although this format differs from the standard ELF format, the `.dl` files still contain valid machine code that can be executed in memory.
+
+## 2. Machine Code Generation
+
+`dlbox` relies on `gcc` for assembly compilation but only uses it to generate `.o` files and manually extracts the `.text` section:
+
+```c
+void dl_gcc(const char *path) {
+    char buf[256], *dot = strrchr(path, '.');
+    if (dot) {
+        *dot = '\0';
+        sprintf(buf, "gcc -m64 -fPIC -c %s.S && "
+                    "objcopy -S -j .text -O binary %s.o %s.dl",
+                    path, path, path);
+        system(buf);
+    }
+}
+```
+
+### Compilation Process
+
+1. **GCC Compilation** (`gcc -m64 -fPIC -c`):
+   - `-m64`: Generates 64-bit code
+   - `-fPIC`: Generates Position-Independent Code for dynamic linking
+   - `-c`: Generates only `.o` files without linking
+
+2. **Object File Processing** (`objcopy`):
+   - `-S`: Strips symbol information
+   - `-j .text`: Extracts only the `.text` section
+   - `-O binary`: Converts to pure binary format
+
+The resulting `.dl` file contains only machine code, without ELF headers or symbol tables.
+
+## 3. Custom Dynamic Loading
+
+While `ld.so` handles ELF dynamic loading, `dlbox` implements its own loader:
+
+```c
+static struct dlib *dlopen(const char *path) {
+    struct dl_hdr hdr;
+    struct dlib *h;
+    int fd = open(path, O_RDONLY);
+    if (fd < 0) goto bad;
+    if (read(fd, &hdr, sizeof(hdr)) < sizeof(hdr)) goto bad;
+    if (strncmp(hdr.magic, DL_MAGIC, strlen(DL_MAGIC)) != 0) goto bad;
+
+    h = mmap(NULL, hdr.file_sz, PROT_READ | PROT_WRITE | PROT_EXEC,
+             MAP_PRIVATE, fd, 0);
+    if (h == MAP_FAILED) goto bad;
+
+    h->symtab = (struct symbol *)((char *)h + REC_SZ);
+    h->path = path;
+
+    for (struct symbol *sym = h->symtab; sym->type; sym++) {
+        switch (sym->type) {
+            case '+': dlload(sym); break;
+            case '?': sym->offset = (uintptr_t)dlsym(sym->name); break;
+            case '#': dlexport(sym->name, (char *)h + sym->offset); break;
+        }
+    }
+    return h;
+
+bad:
+    if (fd > 0) close(fd);
+    return NULL;
+}
+```
+
+### Loading Process
+
+1. Reads `.dl` file header and verifies magic number
+2. Uses `mmap` to load the file into memory with execute permissions
+3. Processes the symbol table:
+   - `+`: Recursively loads dependent libraries
+   - `?`: Resolves external symbols
+   - `#`: Exports symbols for other `.dl` code
+
+## 4. Working Mechanism
+
+dlbox functions because:
+
+1. **Machine Code Integrity**: 
+   - The `.dl` files contain executable machine code generated by `gcc`
+   - CPU can execute the code regardless of the file format
+
+2. **Direct Code Loading**:
+   - Uses `mmap` to load code directly
+   - Manages function calls manually instead of using ELF loading
+
+3. **Custom Dynamic Linking**:
+   - Parses `.dl` symbol tables
+   - Manually resolves symbols similar to ELF relocation tables
+
+4. **Symbol Resolution**:
+   - Implements custom `dlsym()` functionality
+   - Replaces ELF's Global Offset Table (GOT) mechanism
+
+## 5. Comparison with ELF Dynamic Linking
+
+| Feature | ELF (`ld.so`) | dlbox (Custom) |
+|---------|---------------|----------------|
+| File Format | `.so` | `.dl` |
+| Loading Method | `ld.so` loader | Manual `mmap()` |
+| Symbol Resolution | ELF symbol table | Custom symbol table |
+| Code Storage | ELF `.text` section | Raw `.text` binary |
+| Dependency Resolution | ELF shared library | `dlload()` recursive |
+| Symbol Lookup | GOT/PLT tables | Custom `dlsym()` |
+
+## 6. Summary
+
+- dlbox avoids ELF format in favor of using `gcc` for machine code generation and manual dynamic linking
+- Execution is possible through direct `mmap` binary code mapping
+- The system works because:
+  - `.dl` files contain valid machine code
+  - Dynamic linking is handled manually through custom symbol resolution
+  - The custom loader provides necessary runtime support
+
+dlbox serves as a lightweight dynamic loader that bypasses ELF complexity while maintaining functionality, making it an excellent educational tool for understanding dynamic linking concepts.
