@@ -32,4 +32,8 @@ Your submission should include:
 1. **Converted exploit code** (`.c` and/or `.py` files).
 2. **A README** detailing how to set up, run, and verify the attack.
 3. **A report (`report.pdf`)** documenting debugging details and design choices. You may include videos and screenshots in your report.
+4. Please **list all team members' names** in your report.
+5. All submission files must be placed inside the directory of the selected exploit technique.
+6. **Each team member may submit the same report individually.**
+
 
