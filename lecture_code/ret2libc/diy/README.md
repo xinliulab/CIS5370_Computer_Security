@@ -265,3 +265,50 @@ This mechanism ensures that `main` can correctly resolve function addresses duri
    - Returns ready-to-use function pointers
 
 This approach simplifies symbol resolution by eliminating the need for runtime address calculation, as all addresses are pre-computed during the loading phase.
+
+### **Observing Symbol Table Updates and Address Resolution in GDB**  
+
+To analyze how `dlbox` updates the symbol table and resolves addresses, you can use **GDB** to set breakpoints at key locations in `dlbox.c` where symbols are processed.  
+
+#### **1. Start GDB and Load dlbox**
+```bash
+gdb ./dlbox
+```
+
+#### **2. Set Breakpoints at Key Symbol Resolution Points**
+```gdb
+b dlbox.c:184  # Breakpoint at the start of the symbol resolution loop
+b dlbox.c:191  # Breakpoint when a symbol is updated in the table
+b dlbox.c:201  # Breakpoint when an address is returned to the caller
+```
+
+#### **3. Run dlbox with Dynamic Linking**
+```gdb
+run interp main.dl
+```
+
+#### **4. Observe the Symbol Table Updates**
+When execution stops at each breakpoint, use the following commands to inspect how the symbols are being processed:
+
+```gdb
+print syms[i]      # Print the symbol entry being processed
+print syms[i].name # Print the symbol name
+print syms[i].offset # Check if the offset has been updated
+print (void *)syms[i].offset # View the resolved function address
+```
+
+#### **5. Analyze Memory and Address Resolution**
+```gdb
+info registers    # Check register values, including the return address
+x/10xg syms       # Examine the symbol table in memory
+x/10i $rip        # View the next instructions to be executed
+```
+
+#### **6. Step Through Execution**
+Use **`next` (n)** or **`step` (s)** to move through the symbol resolution process:
+```gdb
+n    # Execute the next line
+s    # Step into function calls if necessary
+```
+
+By following these steps, you can **observe how symbols are added, resolved, and returned**, gaining a deeper understanding of dynamic linking in `dlbox`. 🚀

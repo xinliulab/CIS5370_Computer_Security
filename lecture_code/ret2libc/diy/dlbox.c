@@ -35,10 +35,13 @@ void dl_gcc(const char *path) {
     char buf[256], *dot = strrchr(path, '.');
     if (dot) {
         *dot = '\0';
-        sprintf(buf, "gcc -m64 -fPIC -c %s.S && "
+        sprintf(buf, "gcc -m64 -fPIC -g -c %s.S && "
                      "objcopy -S -j .text -O binary %s.o %s.dl",
                 path, path, path);
-        system(buf);
+        if (system(buf) != 0) {
+            fprintf(stderr, "Error: Failed to execute command: %s\n", buf);
+            exit(1);
+        }
     }
 }
 
@@ -141,7 +144,7 @@ static struct dlib *dlopen(const char *path) {
     int fd = open(path, O_RDONLY);
     if (fd < 0)
         goto bad;
-    if (read(fd, &hdr, sizeof(hdr)) < sizeof(hdr))
+    if (read(fd, &hdr, sizeof(hdr)) < (ssize_t)sizeof(hdr))
         goto bad;
     if (strncmp(hdr.magic, DL_MAGIC, strlen(DL_MAGIC)) != 0)
         goto bad;
@@ -178,14 +181,14 @@ bad:
 }
 
 static void *dlsym(const char *name) {
-    for (int i = 0; i < LENGTH(syms); i++)
+    for (size_t i = 0; i < LENGTH(syms); i++)
         if (strcmp(syms[i].name, name) == 0)
             return (void *)syms[i].offset;
     assert(0);
 }
 
 static void dlexport(const char *name, void *addr) {
-    for (int i = 0; i < LENGTH(syms); i++)
+    for (size_t i = 0; i < LENGTH(syms); i++)
         if (!syms[i].name[0]) {
             syms[i].offset = (uintptr_t)addr; // load-time offset
             strcpy(syms[i].name, name);
@@ -195,7 +198,7 @@ static void dlexport(const char *name, void *addr) {
 }
 
 static void dlload(struct symbol *sym) {
-    for (int i = 0; i < LENGTH(libs); i++) {
+    for (size_t i = 0; i < LENGTH(libs); i++) {
         if (libs[i] && strcmp(libs[i]->name, sym->name) == 0)
             return; // already loaded
         if (!libs[i]) {
