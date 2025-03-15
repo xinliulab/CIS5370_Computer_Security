@@ -26,13 +26,14 @@ Steps to compile and run this code:
 #include <stdio.h>
 #include <stdlib.h>
 
-#define N 1000000
+#define N 100000000
 long x = 0;
 
 
 void *Tsum(void *arg) {
     for (int i = 0; i < N; i++) { 
         asm volatile("addq $1, %0": "+m"(x)); 
+        // asm volatile("lock addq $1, %0": "+m"(x)); 
     }
     return NULL;
 }
