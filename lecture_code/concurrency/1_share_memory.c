@@ -27,10 +27,10 @@ Steps to compile and run this code:
 
 pthread_t threads[NTHREAD]; 
 
-int x = 0; //Global Variable
+// int x = 0; //Global Variable
 
 void *Thello(void *arg) {
-  // int x = 0;//Local Variable
+  int x = 0;//Local Variable
   int id = *(int *)arg; 
   usleep(id * 100000);
   printf("Hello from thread #%c\n", "123456789ABCDEF"[x++]);

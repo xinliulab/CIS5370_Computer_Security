@@ -1,9 +1,10 @@
 #include <pthread.h>
 #include <stdio.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <stdatomic.h>
 
-#define N 1000000
+#define N 100000
 long x = 0;
 
 atomic_int flag[2];
