@@ -1,0 +1,3 @@
+**SIMD Instruction Demonstration**: 
+
+Fetching instructions, decoding, and dynamic pipelining all consume circuit resources, including area, power, and memory bandwidth. Therefore, modern CPUs and GPUs implement the ability to perform more computations within a single instruction. The evolution of SIMD in Intel processors has progressed through MMX (using MM registers), SSE (expanded to XMM registers), AVX (expanded to YMM registers), and AVX512 (expanded to ZMM registers).

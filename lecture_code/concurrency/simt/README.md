@@ -1,0 +1,1 @@
+**SIMT Model**: In this non-executable model, we simulate an NVIDIA GPU by "defining" a SIMT processor, where the most notable characteristic is the absence of a per-thread program counter. Instead, a warp of threads shares a single program counter and executes synchronously. The threads within a warp can also be understood as a form of "programmable" SIMD.
