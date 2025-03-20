@@ -23,5 +23,3 @@ Everything in a **model checker** revolves around **state machines**!
 
 - How can we **visualize** this state machine?  
 - How can we **avoid inefficient exploration**?
-
----
