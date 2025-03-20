@@ -19,7 +19,14 @@ Everything in a **model checker** revolves around **state machines**!
 - **From any state, it must always be possible to reach a green/blue state**  
 - What kind of problem does this represent in **G(V, E)**?
 
+### Useage
+
+- make FILE=mutex-bad.py
+- python3.11 model-checker.py mutex-bad.py | python3.11 visualize.py -t > display.html
+
+
 ### **Key Questions**
 
 - How can we **visualize** this state machine?  
 - How can we **avoid inefficient exploration**?
+
