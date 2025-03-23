@@ -21,9 +21,36 @@ Everything in a **model checker** revolves around **state machines**!
 
 ### Useage
 
-- make FILE=mutex-bad.py
-- python3.11 model-checker.py mutex-bad.py | python3.11 visualize.py -t > display.html
+We recommend using a virtual environment (optional but encouraged):
+'''
+python3 -m venv venv
+source venv/bin/activate
+'''
 
+Install required dependencies:
+‘’‘
+brew install graphviz  # （macOS only, required for rendering graphs) 
+pip install graphviz jinja2 markdown astor
+
+’‘’
+
+Using make:
+
+'''
+make FILE=mutex-bad.py
+'''
+
+Or manually:
+
+'''
+python3.11 model-checker.py mutex-bad.py | python3.11 visualize.py > display.html
+'''
+
+Or for simplicity:
+
+'''
+python3.11 model-checker.py mutex-bad.py | python3.11 visualize.py -t > display.html
+'''
 
 ### **Key Questions**
 
