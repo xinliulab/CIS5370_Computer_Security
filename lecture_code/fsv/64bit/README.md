@@ -107,9 +107,15 @@ address_ret = address_rbp + 8
 address_binsh = address_str + 48 + 32  # 48: value, 32: address
 ```
 
----
+## ✅ Step 3: Check
 
-## ✅ Step 3: Debug Safely Before Overwriting Return Address
+```gdb
+gdb ./fmtvul
+run
+continue
+```
+
+## ✅ Step 4: Debug Safely Before Overwriting Return Address
 
 ### ⚠️ Why not write to the return address immediately?
 
