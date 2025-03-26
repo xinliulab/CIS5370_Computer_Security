@@ -1,0 +1,45 @@
+#!/bin/bash
+
+python3 gen.py
+
+bash --init-file <( cat << 'EOF'
+
+clear
+echo "Welcome to 'Maze of Fate: Trial of Destiny'!"
+echo "Story by: GPT-4o"
+echo
+echo "In this mysterious maze, it is said that endless treasures and ancient secrets are hidden."
+echo "You, chosen by fate, must traverse this unknown and perilous labyrinth to uncover the truth lurking in the shadows."
+echo
+echo "Every step is a trial. Every turn could be a life-or-death decision."
+echo "You will guide your destiny by entering Up/Down/Left/Right to explore each unknown tile and reveal its secrets."
+echo
+echo "In this maze, knowledge from the 'CIS 5370' course is your only weapon."
+echo "Will you find your way through the fog and become a legendary hero?"
+echo "Or will you lose yourself in the endless darkness and become a wandering spirit of the maze?"
+echo
+echo "'Maze of Fate: Trial of Destiny' — your adventure begins with the 'ls' and 'pwd' commands!"
+
+shopt -s extglob
+export PS1='\n(Explore) '
+cd game/start
+export PATH=.:$PATH
+
+alias ls=' \
+    if ls | grep X > /dev/null; then echo "You were eaten by Professor Xin Liu."; echo "Game Over."; exit; fi; \
+    echo "You see:"; ls --color | grep \\.; \
+    if ls | grep A > /dev/null; then echo "You found a treasure."; fi; \
+    if ls | grep B > /dev/null; then echo "You discovered a checkpoint."; fi; \
+    if ls | grep C > /dev/null; then echo "You found the CIS 5370 Lab Survival Guide."; fi; \
+    echo; echo "You can go:"; ls --color | grep -v \\. \
+'
+
+alias    Up='cd Up;    clear; echo -n "Going Up... ";    ls'
+alias  Down='cd Down;  clear; echo -n "Going Down... ";  ls'
+alias  Left='cd Left;  clear; echo -n "Going Left... ";  ls'
+alias Right='cd Right; clear; echo -n "Going Right... "; ls'
+
+alias pwd='pwd | sed "s|.*/start||" | sed s/Up/⬆/g | sed s/Down/⬇/g | sed s/Left/⬅/g  | sed s/Right/➡/g'
+
+EOF
+)
