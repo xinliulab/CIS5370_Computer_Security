@@ -1,3 +1,27 @@
-Explain the code:
+# Implementation
 
+## 1_CacheTime.c
 
+'''
+gcc 1_CacheTime.c -O0
+./a.out
+'''
+
+## 2_FlushReload.c
+
+'''
+gcc 2_FlushReload.c -O0
+./a.out
+'''
+
+## 3_ExceptionHandling.c
+'''
+gcc 3_ExceptionHandling.c
+./a.out
+'''
+
+## 4_MeltdownExperiment.c
+'''
+gcc 4_MeltdownExperiment.c
+./a.out
+'''
