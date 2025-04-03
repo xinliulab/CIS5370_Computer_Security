@@ -4,7 +4,7 @@ int main()
 {
    while(1) {
      unlink("/tmp/XYZ");
-     symlink("/dev/null", "/tmp/XYZ");
+     symlink("/tmp/myfile", "/tmp/XYZ");
      usleep(1000);
 
      unlink("/tmp/XYZ");

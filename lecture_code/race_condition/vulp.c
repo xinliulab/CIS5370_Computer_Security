@@ -11,12 +11,16 @@ int main()
    /* get user input */
    scanf("%50s", buffer);
 
-   if(!access(fn, W_OK)){
-        fp = fopen(fn, "a+");
-        fwrite("\n", sizeof(char), 1, fp);
-        fwrite(buffer, sizeof(char), strlen(buffer), fp);
-        fclose(fp);
-   }
+   if (!access(fn, W_OK)) {
+      fp = fopen(fn, "a+");
+      if (fp == NULL) {
+          perror("fopen failed");
+          return 1;
+      }
+      fwrite("\n", sizeof(char), 1, fp);
+      fwrite(buffer, sizeof(char), strlen(buffer), fp);
+      fclose(fp);
+  }
    else printf("No permission \n");
 
    return 0;
