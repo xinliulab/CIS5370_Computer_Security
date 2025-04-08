@@ -1,0 +1,1 @@
+Peterson's Algorithm: We not only provide the model and its variants, but also a C implementation. The model checker gives us the ability to explore different variations of Peterson’s algorithm — for example, by changing the order of statements. With the model checker’s quick feedback, we can gain a faster and deeper understanding of how Peterson’s algorithm works.
