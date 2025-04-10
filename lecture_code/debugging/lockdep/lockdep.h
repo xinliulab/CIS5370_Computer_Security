@@ -1,4 +1,4 @@
-#include <thread-sync.h>
+#include "thread-sync.h"
 
 typedef struct {
     mutex_t mutex;
