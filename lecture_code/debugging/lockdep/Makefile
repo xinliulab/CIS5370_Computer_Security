@@ -1,4 +1,5 @@
-CFLAGS := -O2 -I$(TLIB_PATH)
+CFLAGS := -O2
+
 
 main: main.o lockdep.o
 	g++ $(CFLAGS) -o $@ $^

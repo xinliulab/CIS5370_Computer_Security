@@ -1,6 +1,9 @@
 {
     "files.associations": {
         "stdlib.h": "c",
-        "time.h": "c"
+        "time.h": "c",
+        "thread.h": "c",
+        "lockdep.h": "c",
+        "thread-sync.h": "c"
     }
 }
