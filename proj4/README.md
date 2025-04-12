@@ -1,9 +1,6 @@
-```
-# Quick Start
-
 This project helps you understand how data can be recovered from a FAT32-formatted disk image after a quick format. You will implement a recovery tool that extracts BMP images and verifies them using SHA1 checksums.
 
-## ✅ Steps to Run
+## Quick Start
 
 1. **Format the image file**  
  
@@ -23,10 +20,10 @@ This project helps you understand how data can be recovered from a FAT32-formatt
 4. **Run the recovery tool**
 
    ```bash
-   ./fsrecov fsrecov.img > my.txt
+   ./fsrecov cis5370.img > my.txt
    ```
 
-   This will scan `fsrecov.img` and write recovered image file names and their SHA1 hashes to `my.txt`.
+   This will scan `cis5370.img` and write recovered image file names and their SHA1 hashes to `my.txt`.
 
 5. **Check how many files you recovered correctly**
 
