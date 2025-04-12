@@ -1,6 +1,53 @@
+```
+# Quick Start
+
+This project helps you understand how data can be recovered from a FAT32-formatted disk image after a quick format. You will implement a recovery tool that extracts BMP images and verifies them using SHA1 checksums.
+
+## ✅ Steps to Run
+
+1. **Format the image file**  
+ 
+   ```bash
+   mkfs.fat -v -F 32 -S 512 -s 8 cis5370.img
+   ```
+
+2. **Write your code**  
+   Edit `fsrecov.c` to implement the recovery logic.
+
+3. **Compile the program**
+
+   ```bash
+   make
+   ```
+
+4. **Run the recovery tool**
+
+   ```bash
+   ./fsrecov fsrecov.img > my.txt
+   ```
+
+   This will scan `fsrecov.img` and write recovered image file names and their SHA1 hashes to `my.txt`.
+
+5. **Check how many files you recovered correctly**
+
+   ```bash
+   python3 grade.py
+   ```
+
+   This will compare `my.txt` with `criteria.txt` and show how many files you recovered with correct names and hashes.
+
+---
+
+
 # 1. Background
 
-Today, we tend to back up important files to cloud storage or local storage devices. While this increases data reliability, what if you accidentally quick-format your SD card (nowadays usually formatted as a FAT file system for compatibility)? Even if the file system directory structures are destroyed, the data may still physically exist — and in that case, we can still recover it!
+Data is incredibly valuable to everyone. File systems like FAT (or exFAT) are still widely used in storage media such as digital camera SD cards. Due to their "append-write" behavior, most photos are stored contiguously on the card, which makes them relatively easier to recover. If you accidentally delete a day’s worth of photos and manage to recover them, you’ll likely feel grateful for the mercy shown by the file system designers.
+
+However, this also opens up opportunities for malicious actors. There are always files you don’t want others to see — and simply deleting them from the file system isn’t enough. You want to ensure that even if someone gets hold of your disk and tries to recover data, they won’t be able to retrieve the contents: files that store plaintext passwords to various websites, private photos you’d rather keep secret...
+
+A formatted SD card or a factory-reset phone could become a tool of extortion in the hands of the wrong person.
+
+Fortunately, with the growing adoption of file system-level encryption — where data is encrypted before it’s even written to disk — users no longer need to worry as much about these risks.
 
 To recover such data, we need to understand how formatting works. Note that a file system is essentially a data structure built on a disk. If you care about data structures, consider the following analogy:
 
@@ -217,7 +264,7 @@ There are plenty of helpful resources online to assist you in understanding the 
 - [Wikipedia - BMP File Format](https://en.wikipedia.org/wiki/BMP_file_format)
 - [Microsoft Bitmap (BMP) File Structure](https://learn.microsoft.com/en-us/windows/win32/gdi/bitmap-storage)
 
-
+![Alt text](bitmap-format.bmp)
 ---
 
 # 12.  Image Data Recovery
