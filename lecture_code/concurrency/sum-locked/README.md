@@ -1,0 +1,1 @@
+Implementing a spinlock with cmpxchg: An atomic load–store lets us (1) fetch the value in memory and (2) write a new value back, while the instruction still has a “stop‑the‑world” effect on multiprocessor systems. Therefore, no matter how many threads call lock() at the same time, only one will read the value UNLOCKED and acquire the lock, guaranteeing mutual exclusion.

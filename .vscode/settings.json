@@ -4,6 +4,7 @@
         "time.h": "c",
         "thread.h": "c",
         "lockdep.h": "c",
-        "thread-sync.h": "c"
+        "thread-sync.h": "c",
+        "unistd.h": "c"
     }
 }
