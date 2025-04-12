@@ -66,7 +66,7 @@ Using the `fsrecov` tool, given a FAT32 file system that has been quick-formatte
 
 # 3. Reference Image
 
-We provide a sample file system image for reference. The actual test images are from the same dataset (WikiArt), but we may select different images and randomly rename or resize them. Nevertheless, all images maintain the same characteristics (e.g., similar file name length distribution). You can [download the reference image here](#).
+We provide a sample file system image for reference. The actual test images are from the same dataset (WikiArt), but we may select different images and randomly rename or resize them. Nevertheless, all images maintain the same characteristics (e.g., similar file name length distribution). .
 
 Once downloaded, you can directly mount the image file as a file system (you may need `root` privileges). The image will appear as part of the file system:
 
