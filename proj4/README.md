@@ -27,7 +27,7 @@ We provide a sample file system image for reference. The actual test images are 
 Once downloaded, you can directly mount the image file as a file system (you may need `root` privileges). The image will appear as part of the file system:
 
 ```bash
-$ mount /tmp/fsrecov.img /mnt/
+$ mount /tmp/cis5370.img /mnt/
 $ tree /mnt/
 /mnt/
 └── DCIM
@@ -59,10 +59,10 @@ If you use a binary inspection tool (such as `xxd`) to view the disk image, you�
 Next, you can simulate the operation performed by the Online Judge when testing your recovery code: use `mkfs.fat` to **quick format** the disk image:
 
 ```bash
-$ mkfs.fat -v -F 32 -S 512 -s 8 fsrecov.img
+$ mkfs.fat -v -F 32 -S 512 -s 8 cis5370.img
 mkfs.fat 4.1 (2017-01-24)
 WARNING: Not enough clusters for a 32 bit FAT!
-/tmp/fsrecov.img has 64 heads and 32 sectors per track,
+/tmp/cis5370.img has 64 heads and 32 sectors per track,
 hidden sectors 0x0000;
 logical sector size is 512,
 using 0xf8 media descriptor, with 131072 sectors;
@@ -103,7 +103,7 @@ $ tree /mnt/
 
 # 6. Inspecting the FAT Table Post-Format
 
-If you inspect `fsrecov.img` again using a binary tool like `xxd`, you’ll see that the FAT entries have been “cleared”:
+If you inspect `cis5370.img` again using a binary tool like `xxd`, you’ll see that the FAT entries have been “cleared”:
 
 ```
 00004000: f8ff ffff 0fff ffff 0000 0000 0000 0000  ................
@@ -153,7 +153,7 @@ d60e7d3db2d7419148af5b0ba524068b6ec6ef83  0M15CwG1yP32UCPc.bmp
 
 # 9. Verifying Recovery with SHA1 Checksums
 
-If you mount the **original (unformatted)** `fsrecov.img`, you can compute the SHA1 checksums of all BMP images to verify which ones you have successfully recovered.
+If you mount the **original (unformatted)** `cis5370.img`, you can compute the SHA1 checksums of all BMP images to verify which ones you have successfully recovered.
 
 ```bash
 $ cd /mnt/DCIM && sha1sum *.bmp
@@ -165,9 +165,6 @@ aabd1ef8a2371dd64fb64fc7f10a0a31047d1023  2pxHTrpI.bmp
 
 You can use these checksums to compare against the output of your recovery tool to determine which files were correctly recovered.
 
---- 
-
-以下是你这段内容翻译成英文 `README.md` 格式：
 
 ---
 
@@ -178,7 +175,7 @@ We provide a **local copy of the Microsoft FAT Specification** for your referenc
 The FAT file system consists of:
 - Some header metadata,
 - A **FAT (File Allocation Table)**,
-- And a **data region** (also known as "clusters", the official Microsoft translation being “簇”).
+- And a **data region** (also known as "clusters").
 
 Through analysis, you’ll find:
 
@@ -204,9 +201,6 @@ You are encouraged to conduct your own experiments — using the provided disk i
 
 Although a real file system is stored on disk (a block device), once you `mmap` it, it becomes an in-memory data structure. You can access and manipulate it directly, though you’ll need to **manually compute some pointer offsets** to access the correct memory locations.
 
----
-
-以下是这段内容翻译为英文 `README.md` 格式的版本：
 
 ---
 
@@ -223,9 +217,6 @@ There are plenty of helpful resources online to assist you in understanding the 
 - [Wikipedia - BMP File Format](https://en.wikipedia.org/wiki/BMP_file_format)
 - [Microsoft Bitmap (BMP) File Structure](https://learn.microsoft.com/en-us/windows/win32/gdi/bitmap-storage)
 
----
-
-以下是你提供的内容翻译为英文的 `README.md` 形式：
 
 ---
 
@@ -271,10 +262,6 @@ One basic way to think about images is as a **function of space and time**. For 
 
 These are useful in image processing tasks such as motion detection, edge detection, and more.
 
----
-
-
-以下是你这段内容翻译为英文 `README.md` 的版本：
 
 ---
 
@@ -295,7 +282,7 @@ $ echo "Hello, World" | sha1sum
 
 A checksum (also known as a fingerprint) is the result of a **one-way hash function** `H(x)` that maps a large string space into a small, fixed-length output. The key property is that it's **computationally infeasible** to reverse-engineer the original input `x` from a given hash value `t` such that `H(x) = t`.
 
-Checksums help quickly verify file equality without comparing entire contents. They are also widely used for **data deduplication**. For instance, in many messaging apps (like QQ or WeChat), when you upload a file, the server first checks the checksum — if someone has already uploaded the same file, it instantly completes the transfer, leading to the phenomenon known as “秒传” (instant transmission).
+Checksums help quickly verify file equality without comparing entire contents. They are also widely used for **data deduplication**. For instance, in many messaging apps (like QQ or WeChat), when you upload a file, the server first checks the checksum — if someone has already uploaded the same file, it instantly completes the transfer, leading to the phenomenon known as instant transmission.
 
 ---
 
