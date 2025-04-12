@@ -261,7 +261,8 @@ There are plenty of helpful resources online to assist you in understanding the 
 - [Wikipedia - BMP File Format](https://en.wikipedia.org/wiki/BMP_file_format)
 - [Microsoft Bitmap (BMP) File Structure](https://learn.microsoft.com/en-us/windows/win32/gdi/bitmap-storage)
 
-![Alt text](bitmap-format.bmp)
+![Alt text](bitmap-format.png)
+
 ---
 
 # 12.  Image Data Recovery
@@ -272,7 +273,7 @@ Next, you’ll need to **recover directory entries** from the file system, which
 
 The figure below shows an example of a short file name entry followed by a long file name (LFN) stored across multiple entries:
 
-![Directory Entry Format](directory_entry_example.png) <!-- Add actual image path -->
+![Directory Entry Format](fat-filename.webp) 
 
 Once you recover a valid directory entry, you obtain not only the **correct file name**, but also **useful metadata** such as the **starting cluster ID**. With this cluster ID, you can locate the corresponding data block and determine whether it contains a BMP header.
 
