@@ -280,6 +280,26 @@ Once you recover a valid directory entry, you obtain not only the **correct file
 - If it does, you can treat it as a valid image file.
 - If the cluster does not contain a BMP header, you may safely discard that file during recovery.
 
+The remaining task is to recover the rest of the image! Simply put, you can assume that the remaining parts of the image (called *clusters*) are stored sequentially in the file. Therefore, as long as you correctly determine the size of the file (this information is also available in the directory entry), you can directly recover an image.
+
+If you want to go further, you'll need to do some mathematical analysis. What we've lost is the FAT table, which represents all the "link" relationships. For example, we can model the file recovery as a graph problem:
+
+- Build a directed graph **G**, where each *cluster* is a vertex.
+- For two vertices **u** and **v**, add an edge from $u \to v$, with weight $w_{u,v}$ representing the probability that **v** follows **u** in the original file.
+
+Each "most probable path" then corresponds to a recovered file.
+
+So, how do we compute the probability that one cluster follows another? Let’s assume each image is a function $f = f(x, y)$. Based on this assumption, we can estimate the edge weight by computing how similar the derivatives are:
+
+$$
+\frac{dz}{dx} = \frac{\partial z}{\partial x} + \frac{\partial z}{\partial y} \cdot \frac{dy}{dx}
+$$
+
+Of course, in practice, simply computing pixel similarity may be enough, but it’s also possible to go further. These techniques come from many classic methods, such as convolution-based matching. Convolution (or convolutional neural networks) is also the basis of many image restoration algorithms.
+
+So we don’t need to manually recover everything—just write some code, and use methods like block similarity (as discussed earlier) to reassemble the correct order. This example provides a good opportunity to explore the combination of **"block"** matching and **graph algorithms**, and to understand how image continuity can be modeled mathematically.
+
+
 ---
 
 # 13. Recovering the Bitmap Data
